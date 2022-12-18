@@ -33,7 +33,6 @@ def table_menu():
 
 
 def create_db():
-    my_cursor = mydb.cursor()
     try:
         sql = """CREATE TABLE customers 
         (
@@ -51,7 +50,6 @@ def create_db():
 
 def read_db():
     sql = "SELECT * FROM customers"
-    my_cursor = mydb.cursor()
 
     try:
         my_cursor.execute(sql)
@@ -73,48 +71,14 @@ def update_db():
     no_hp = input("Phone Number: ")
     email = input("Email: ")
     purchase_date = datetime.datetime.now()
-    my_cursor = mydb.cursor()
 
     # Update name
-    sql = "UPDATE customers SET name = %s WHERE id = %s"
-    val = (name, ID)
-    try:
-        my_cursor.execute(sql, val)
-        mydb.commit()
-    except Exception as ex:
-        print(ex)
-
-    # Update address
-    sql = "UPDATE customers SET address = %s WHERE id = %s"
-    val = (address, ID)
-    try:
-        my_cursor.execute(sql, val)
-        mydb.commit()
-    except Exception as ex:
-        print(ex)
-
-    # Update no_hp
-    sql = "UPDATE customers SET no_hp = %s WHERE id = %s"
-    val = (no_hp, ID)
-    try:
-        my_cursor.execute(sql, val)
-        mydb.commit()
-    except Exception as ex:
-        print(ex)
-
-    # Update email
-    sql = "UPDATE customers SET email = %s WHERE id = %s"
-    val = (email, ID)
-    try:
-        my_cursor.execute(sql, val)
-        mydb.commit()
-
-    except Exception as ex:
-        print(ex)
-
-    # Update purchase_date
-    sql = "UPDATE customers SET purchase_date = %s WHERE id = %s"
-    val = (purchase_date, ID)
+    sql = """
+    UPDATE customers SET name = %s, 
+    address = %s, no_hp = %s, 
+    email = %s, purchase_date = %s 
+    WHERE id = %s"""
+    val = (name, address, no_hp, email, purchase_date, ID)
     try:
         my_cursor.execute(sql, val)
         mydb.commit()
@@ -126,7 +90,7 @@ def delete_db():
     read_db()
     print("Enter ID of Data that you want to update")
     ID = int(input("ID: "))
-    my_cursor = mydb.cursor()
+
     sql = "DELETE FROM customers WHERE id = %s"
     val = (ID,)
     try:
@@ -144,8 +108,6 @@ def insert_db():
     email = input("Email: ")
     purchase_date = datetime.datetime.now()
 
-    my_cursor = mydb.cursor()
-
     sql = "INSERT INTO customers (name, address, no_hp, email, purchase_date) VALUES (%s, %s, %s, %s, %s)"
     val = (name, address, no_hp, email, purchase_date)
 
@@ -159,7 +121,6 @@ def insert_db():
 
 def delete_all_db():
     sql = "DROP TABLE IF EXISTS customers"
-    my_cursor = mydb.cursor()
 
     try:
         my_cursor.execute(sql)
@@ -168,6 +129,7 @@ def delete_all_db():
 
 
 if __name__ == "__main__":
+    my_cursor = mydb.cursor()
     while True:
         table_menu()
         num = int(input("choice (1/2/3/4/5/6/7): "))
@@ -196,3 +158,7 @@ if __name__ == "__main__":
             print("Error Input")
             clear_screen()
             continue
+
+    my_cursor.close()
+
+    
